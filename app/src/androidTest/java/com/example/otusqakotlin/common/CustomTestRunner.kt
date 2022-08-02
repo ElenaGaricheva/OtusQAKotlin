@@ -1,28 +1,35 @@
 package com.example.otusqakotlin.common
 
-class CustomTestRunner: TestRunner<TestSteps> {
-    val testSteps = TestSteps()
+import kotlin.reflect.full.declaredFunctions
 
-    override fun runTest(steps: TestSteps, test: () -> Unit){
+class CustomTestRunner<T>: TestRunner<T> {
 
-        steps.before {
-            println("Prepare data")
+    override fun runTest(steps: T, test: () -> Unit) {
+
+        val methods = steps!!::class.declaredFunctions
+
+        methods.forEach {
+            if (it.name.startsWith("before")) {
+                it.call(steps)
+            }
         }
 
         test()
 
-        steps.after {
-            println("Clear data")
+        methods.forEach {
+            if (it.name.startsWith("after")) {
+                it.call(steps)
+            }
         }
     }
 }
 
 class TestSteps() {
-    fun before(action: () -> Any) {
-        action()
+    fun before() {
+        println("Prepare data")
     }
 
-    fun after(action: () -> Any) {
-        action()
+    fun after() {
+        println("Clean data")
     }
 }
