@@ -1,19 +1,20 @@
 package com.example.otusqakotlin
 
 import com.example.otusqakotlin.common.CustomTestRunner
+import com.example.otusqakotlin.common.TestSteps
 
 fun main() {
-        val testRunner = CustomTestRunner()
-        testRunner.run {
+    val testRule = TestSteps()
+    val testRunner = CustomTestRunner<TestSteps>()
 
-            runTest(testSteps) {
-                firstTest()
-            }
-
+    testRunner.run {
+        runTest(testRule) {
+            firstTest()
         }
     }
+}
 
-    fun firstTest() {
-       println("Test passed")
-    }
+fun firstTest() {
+    println("Test passed")
+}
 
